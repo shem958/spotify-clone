@@ -1,6 +1,6 @@
 import React from "react";
 // Import the global css styles
-import "../globals.css";
+import "./globals.css";
 
 // Define the RootLayout component that takes children as a prop
 export default function RootLayout({

@@ -1,9 +1,8 @@
-import { getSession } from 'next-auth/react';
+import { getSession } from "next-auth/react";
 
-export const protectRoute = async () => {
+export default async function protectRoute() {
   const session = await getSession();
   if (!session) {
-    // Redirect to login page if not authenticated
     if (typeof window !== 'undefined') {
       window.location.href = '/login';
     } else {
@@ -11,4 +10,4 @@ export const protectRoute = async () => {
     }
   }
   return session;
-};
+}
