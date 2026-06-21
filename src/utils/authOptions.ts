@@ -1,16 +1,8 @@
-import NextAuth from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 import { JWT } from "next-auth/jwt";
-import { DefaultSession } from "next-auth";
 
-declare module "next-auth" {
-  interface Session extends DefaultSession {
-    accessToken?: string;
-    error?: string;
-  }
-}
-
-const refreshAccessToken = async (token: JWT) => {
+const refreshAccessToken = async (token: JWT): Promise<JWT> => {
   try {
     const url =
       "https://accounts.spotify.com/api/token?" +
@@ -50,13 +42,13 @@ const refreshAccessToken = async (token: JWT) => {
   }
 };
 
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     SpotifyProvider({
       clientId: process.env.SPOTIFY_CLIENT_ID as string,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
       authorization:
-        "https://accounts.spotify.com/authorize?scope=user-read-email,playlist-read-private",
+        "https://accounts.spotify.com/authorize?scope=user-read-email,playlist-read-private,user-read-playback-state,user-modify-playback-state,user-read-currently-playing,streaming",
     }),
   ],
   callbacks: {
@@ -68,23 +60,21 @@ export default NextAuth({
       }
 
       if (token.accessToken && token.refreshToken) {
-        // Access token has not expired yet, return the token
         if (Date.now() < (token.accessTokenExpires as number)) {
           return token;
         }
-
-        // Access token has expired, try to refresh it
         return refreshAccessToken(token);
       }
 
-      // Handle cases where access token or refresh token is missing
       return token;
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
       session.error = token.error as string | undefined;
-
       return session;
     },
   },
-});
+  pages: {
+    signIn: "/login",
+  },
+};

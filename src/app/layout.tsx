@@ -1,30 +1,26 @@
 import React from "react";
-// Import the global css styles
 import "./globals.css";
+import Providers from "@/components/Providers";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
-// Define the RootLayout component that takes children as a prop
+export const metadata = {
+  title: "Spotify Clone - High-Fidelity Audio Experience",
+  description: "A premium production-grade audio streaming platform with canvas visualizations, real-time collaboration, and synchronized lyrics.",
+};
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    // Set the language attribute for the HTMl document
-    <html lang="en">
-      <body>
-        {/* Define the header section with a gray background and white text */}
-        <header className="bg-gray-800 p-4 text-white">
-          {/* Main heading of the application */}
-          <h1 className="text-xl">Spotify Clone</h1>
-        </header>
-        {/* Define the main content area with padding */}
-        <main className="p-4">
-          {/* Render the children components passed to the RootLayout */}
+    <html lang="en" className="dark h-full w-full">
+      <body className="bg-black text-zinc-100 antialiased selection:bg-emerald-500/30 overflow-hidden h-full w-full font-sans">
+        <Providers>
           {children}
-        </main>
+          <ServiceWorkerRegister />
+        </Providers>
       </body>
     </html>
   );
 }
-
-// This layout component is a foundational part of this application, ensuring consistent styling and structure across all pages.
